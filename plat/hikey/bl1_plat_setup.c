@@ -218,11 +218,30 @@ static void hikey_hi6553_init(void)
 	hi6553_write_8(BUCK2_REG1, 0x4f);
 	hi6553_write_8(BUCK2_REG5, 0x99);
 	hi6553_write_8(BUCK2_REG6, 0x45);
+	isb();
+	dsb();
+	mdelay(1);
+	hi6553_write_8(VSET_BUCK2_ADJ, 0x22);
+	isb();
+	dsb();
+	mdelay(1);
 
 	/* configure BUCK3 */
 	hi6553_write_8(BUCK3_REG3, 0x02);
 	hi6553_write_8(BUCK3_REG5, 0x99);
 	hi6553_write_8(BUCK3_REG6, 0x41);
+	isb();
+	dsb();
+#ifdef DDR800
+	hi6553_write_8(VSET_BUCK3_ADJ, 0x02);
+	//hi6553_write_8(VSET_BUCK3_ADJ, 0x03);
+#else
+	//hi6553_write_8(VSET_BUCK3_ADJ, 0x02);
+	hi6553_write_8(VSET_BUCK3_ADJ, 0x00);
+#endif
+	isb();
+	dsb();
+	mdelay(1);
 
 	/* configure BUCK4 */
 	hi6553_write_8(BUCK4_REG2, 0x9a);
