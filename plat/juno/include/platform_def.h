@@ -153,20 +153,20 @@
 /*
  * The TSP can execute either from Trusted SRAM or Trusted DRAM.
  */
-#define BL32_SRAM_BASE                  (TZRAM_BASE + TZRAM_SIZE - 0x1d000)
-#define BL32_SRAM_LIMIT                 BL2_BASE
+#define BL32_SRAM_BASE                  TZRAM_BASE
+#define BL32_SRAM_LIMIT                 BL31_BASE
 #define BL32_DRAM_BASE                  DRAM_SEC_BASE
-#define BL32_DRAM_LIMIT                 (DRAM_SEC_BASE + DRAM_SEC_SIZE - \
-					DRAM_SCP_SIZE)
+#define BL32_DRAM_LIMIT                 (DRAM_SEC_BASE + DRAM_SEC_SIZE)
 
 #if (PLAT_TSP_LOCATION_ID == PLAT_TRUSTED_SRAM_ID)
 # define TSP_SEC_MEM_BASE		TZRAM_BASE
 # define TSP_SEC_MEM_SIZE		TZRAM_SIZE
 # define BL32_BASE			BL32_SRAM_BASE
 # define BL32_LIMIT			BL32_SRAM_LIMIT
+//# define BL32_PROGBITS_LIMIT	BL2_BASE
 #elif (PLAT_TSP_LOCATION_ID == PLAT_DRAM_ID)
 # define TSP_SEC_MEM_BASE		DRAM_SEC_BASE
-# define TSP_SEC_MEM_SIZE		(DRAM_SEC_SIZE - DRAM_SCP_SIZE)
+# define TSP_SEC_MEM_SIZE		DRAM_SEC_SIZE
 # define BL32_BASE			BL32_DRAM_BASE
 # define BL32_LIMIT			BL32_DRAM_LIMIT
 #else

@@ -42,17 +42,23 @@
 #define XG2RAM0_BASE			0xF9800000
 #define XG2RAM0_SIZE			0x00400000
 
+#define PLAT_TRUSTED_SRAM_ID	0
+#define PLAT_DRAM_ID		1
+
 /*
  * DRAM at 0x0000_0000 is divided in two regions:
  *   - Secure DRAM (default is the top 16MB except for the last 2MB, which are
  *     used by the SCP for DDR retraining)
  *   - Non-Secure DRAM (remaining DRAM starting at DRAM_BASE)
  */
-#define DRAM_SEC_SIZE			0x01000000
+#define DRAM_SCP_SIZE		0x00000000
+#define DRAM_SCP_BASE		(DRAM_BASE + DRAM_SIZE - DRAM_SCP_SIZE)
+
+#define DRAM_SEC_SIZE			(0x01000000 - DRAM_SCP_SIZE)
 #define DRAM_SEC_BASE			(DRAM_BASE + DRAM_SIZE - DRAM_SEC_SIZE)
 
 #define DRAM_NS_BASE			DRAM_BASE
-#define DRAM_NS_SIZE			(DRAM_SIZE - DRAM_SEC_SIZE)
+#define DRAM_NS_SIZE			(DRAM_SIZE - DRAM_SCP_SIZE - DRAM_SEC_SIZE)
 
 /*******************************************************************************
  * GIC-400 & interrupt handling related constants
