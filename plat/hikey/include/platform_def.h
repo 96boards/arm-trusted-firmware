@@ -132,6 +132,12 @@
 #define BL31_LIMIT			(BL31_BASE + 0x40000)
 
 /*******************************************************************************
+ * BL3-1 specific defines.
+ ******************************************************************************/
+#define BL30_BASE			(0x01000000)	/* 0xf989_8000 */
+#define BL30_LIMIT			(0x01000000 + 0x40000)
+
+/*******************************************************************************
  * Load address of BL3-3 in the HiKey port
  ******************************************************************************/
 #define NS_IMAGE_OFFSET			(DRAM_BASE + 0x37000000)  /* 880MB */
@@ -142,7 +148,7 @@
 #define ADDR_SPACE_SIZE			(1ull << 32)
 
 #if IMAGE_BL1 || IMAGE_BL2 || IMAGE_BL31
-# define MAX_XLAT_TABLES		3
+# define MAX_XLAT_TABLES		4
 #endif
 
 #define MAX_MMAP_REGIONS		16
