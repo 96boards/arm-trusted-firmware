@@ -37,7 +37,9 @@
 #include <hi6220_regs_peri.h>
 #include <hi6220_regs_pmctrl.h>
 
+#include <hisi_hkadc.h>
 #include <hisi_mcu.h>
+#include <hisi_sram_map.h>
 
 #define MEDIA_CTRL_BASE				0xf4410000
 #define MEDIA_SUBSYS_CTRL2			(MEDIA_CTRL_BASE + 0x508)
