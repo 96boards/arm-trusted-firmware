@@ -40,6 +40,7 @@
 #define DISABLE6_XO_CLK_RF1			(1 << 3)
 #define DISABLE6_XO_CLK_RF2			(1 << 4)
 
+#define VERSION_REG				0x000
 #define PERI_EN_MARK				0x040
 #define BUCK2_REG1				0x04a
 #define BUCK2_REG5				0x04e
@@ -80,6 +81,9 @@
 #define LED_LIGHT_TIME				0xf0
 #define LED_GREEN_ENABLE			(1 << 1)
 #define LED_OUT_CTRL				0x00
+
+#define PMU_HI6552_V300				0x30
+#define PMU_HI6552_V310				0x31
 
 extern unsigned char hi6553_read_8(unsigned int offset);
 extern void hi6553_write_8(unsigned int offset, unsigned int value);
