@@ -1113,7 +1113,10 @@ static void init_media_clk(void)
 
 void hi6220_pll_init(void)
 {
+	init_hkadc();
+	init_boardid();
 	init_pll();
+	init_acpu_dvfs();
 	init_freq();
 	init_ddr();
 	init_ddrc_qos();
