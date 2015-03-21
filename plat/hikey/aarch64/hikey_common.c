@@ -56,6 +56,10 @@
 					0x1000,				\
 					MT_DEVICE | MT_RW | MT_NS)
 
+#define MAP_SRAM	MAP_REGION_FLAT(SRAM_BASE,			\
+					SRAM_SIZE,			\
+					MT_DEVICE | MT_RW | MT_SECURE)
+
 /*
  * Table of regions for different BL stages to map using the MMU.
  * This doesn't include Trusted RAM as the 'mem_layout' argument passed to
@@ -66,6 +70,7 @@ static const mmap_region_t hikey_mmap[] = {
 	MAP_DEVICE,
 	MAP_NS_DRAM,
 	MAP_ROM_PARAM,
+	MAP_SRAM,
 	{0}
 };
 #endif
@@ -74,6 +79,7 @@ static const mmap_region_t hikey_mmap[] = {
 	MAP_DEVICE,
 	MAP_NS_DRAM,
 	MAP_TSP_MEM,
+	MAP_SRAM,
 	{0}
 };
 #endif
