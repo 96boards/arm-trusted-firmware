@@ -56,6 +56,9 @@
 #define DRAM_NS_BASE			DRAM_BASE
 #define DRAM_NS_SIZE			(DRAM_SIZE - DRAM_SEC_SIZE)
 
+#define SRAM_BASE			0xFFF80000
+#define SRAM_SIZE			0x00012000
+
 /*******************************************************************************
  * GIC-400 & interrupt handling related constants
  ******************************************************************************/
