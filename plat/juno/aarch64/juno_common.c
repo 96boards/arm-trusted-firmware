@@ -102,6 +102,7 @@ static const mmap_region_t juno_mmap[] = {
 	MAP_IOFPGA,
 	MAP_DEVICE0,
 	MAP_DEVICE1,
+	MAP_TSP_MEM,
 	{0}
 };
 #endif

@@ -149,18 +149,26 @@
 /*******************************************************************************
  * BL3-2 specific defines.
  ******************************************************************************/
+
+/*
+ * The TSP can execute either from Trusted SRAM or Trusted DRAM.
+ */
+#define BL32_SRAM_BASE                  TZRAM_BASE
+#define BL32_SRAM_LIMIT                 BL31_BASE
+#define BL32_DRAM_BASE                  DRAM_SEC_BASE
+#define BL32_DRAM_LIMIT                 (DRAM_SEC_BASE + DRAM_SEC_SIZE)
+
 #if (PLAT_TSP_LOCATION_ID == PLAT_TRUSTED_SRAM_ID)
 # define TSP_SEC_MEM_BASE		TZRAM_BASE
 # define TSP_SEC_MEM_SIZE		TZRAM_SIZE
-# define BL32_BASE			TZRAM_BASE
-# define BL32_LIMIT			BL31_BASE
-# define BL32_PROGBITS_LIMIT		BL2_BASE
+# define BL32_BASE			BL32_SRAM_BASE
+# define BL32_LIMIT			BL32_SRAM_LIMIT
+//# define BL32_PROGBITS_LIMIT	BL2_BASE
 #elif (PLAT_TSP_LOCATION_ID == PLAT_DRAM_ID)
 # define TSP_SEC_MEM_BASE		DRAM_SEC_BASE
-# define TSP_SEC_MEM_SIZE		(DRAM_SEC_SIZE - DRAM_SCP_SIZE)
-# define BL32_BASE			DRAM_SEC_BASE
-# define BL32_LIMIT			(DRAM_SEC_BASE + DRAM_SEC_SIZE - \
-					DRAM_SCP_SIZE)
+# define TSP_SEC_MEM_SIZE		DRAM_SEC_SIZE
+# define BL32_BASE			BL32_DRAM_BASE
+# define BL32_LIMIT			BL32_DRAM_LIMIT
 #else
 # error "Unsupported PLAT_TSP_LOCATION_ID value"
 #endif
@@ -176,7 +184,7 @@
 #define ADDR_SPACE_SIZE			(1ull << 32)
 
 #if IMAGE_BL1 || IMAGE_BL31
-# define MAX_XLAT_TABLES		2
+# define MAX_XLAT_TABLES		3
 #endif
 
 #if IMAGE_BL2 || IMAGE_BL32

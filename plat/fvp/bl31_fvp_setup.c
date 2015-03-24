@@ -122,6 +122,40 @@ entry_point_info_t *bl31_plat_get_next_image_ep_info(uint32_t type)
 }
 
 /*******************************************************************************
+ * Return a pointer to the 'image_info' structure of the next image for the
+ * security state specified. BL33 corresponds to the non-secure image type
+ * while BL32 corresponds to the secure image type. A NULL pointer is returned
+ * if the image does not exist.
+ ******************************************************************************/
+image_info_t *bl31_plat_get_next_image_image_info(uint32_t type)
+{
+#if RESET_TO_BL31
+	assert(sec_state_is_valid(type));
+
+	if (type == NON_SECURE)
+		return NULL;
+	else
+		return NULL;
+#else
+	image_info_t *next_image_info;
+
+	assert(sec_state_is_valid(type));
+
+	next_image_info = (type == NON_SECURE) ?
+		bl2_to_bl31_params->bl33_image_info :
+		bl2_to_bl31_params->bl32_image_info;
+
+	/* None of the images on this platform can have size 0x0 */
+	if (next_image_info->image_size)
+		return next_image_info;
+	else
+		return NULL;
+#endif
+}
+
+
+
+/*******************************************************************************
  * Perform any BL31 specific platform actions. Here is an opportunity to copy
  * parameters passed by the calling EL (S-EL1 in BL2 & S-EL3 in BL1) before they
  * are lost (potentially). This needs to be done before the MMU is initialized

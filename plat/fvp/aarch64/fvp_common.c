@@ -104,6 +104,7 @@ const mmap_region_t fvp_mmap[] = {
 	MAP_SHARED_RAM,
 	MAP_DEVICE0,
 	MAP_DEVICE1,
+	MAP_TSP_SEC_MEM,
 	{0}
 };
 #endif

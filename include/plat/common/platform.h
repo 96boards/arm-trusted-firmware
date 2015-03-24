@@ -172,6 +172,7 @@ void bl31_early_platform_setup(struct bl31_params *from_bl2,
 void bl31_plat_arch_setup(void);
 void bl31_platform_setup(void);
 struct entry_point_info *bl31_plat_get_next_image_ep_info(uint32_t type);
+struct image_info *bl31_plat_get_next_image_image_info(uint32_t type);
 
 /*******************************************************************************
  * Mandatory PSCI functions (BL3-1)

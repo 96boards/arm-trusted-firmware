@@ -75,6 +75,7 @@ extern unsigned long __COHERENT_RAM_END__;
  * Placeholder variables for copying the arguments that have been passed to
  * BL3-1 from BL2.
  ******************************************************************************/
+static entry_point_info_t bl32_ep_info;
 static entry_point_info_t bl33_ep_info;
 
 /*******************************************************************************
@@ -87,10 +88,7 @@ entry_point_info_t *bl31_plat_get_next_image_ep_info(uint32_t type)
 {
 	entry_point_info_t *next_image_info;
 
-	if (type != NON_SECURE)
-		return NULL;
-
-	next_image_info = &bl33_ep_info;
+	next_image_info = (type == NON_SECURE) ? &bl33_ep_info : &bl32_ep_info;
 
 	/* None of the images on this platform can have 0x0 as the entrypoint */
 	if (next_image_info->pc)
@@ -123,9 +121,10 @@ void bl31_early_platform_setup(bl31_params_t *from_bl2,
 		 CCI400_SL_IFACE4_CLUSTER_IX);
 
 	/*
-	 * Copy BL3-3 entry point information.
+	 * Copy BL3-2 and BL3-3 entry point information.
 	 * They are stored in Secure RAM, in BL2's address space.
 	 */
+	bl32_ep_info = *from_bl2->bl32_ep_info;
 	bl33_ep_info = *from_bl2->bl33_ep_info;
 }
 

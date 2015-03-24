@@ -161,25 +161,24 @@
  * BL32 specific defines.
  ******************************************************************************/
 /*
- * On FVP, the TSP can execute from Trusted SRAM, Trusted DRAM or the DRAM
- * region secured by the TrustZone controller.
+ * The TSP can execute either from Trusted SRAM or Trusted DRAM.
  */
-#if FVP_TSP_RAM_LOCATION_ID == FVP_TRUSTED_SRAM_ID
+#define BL32_SRAM_BASE			FVP_TRUSTED_SRAM_BASE
+#define BL32_SRAM_LIMIT			BL31_BASE
+#define BL32_DRAM_BASE			FVP_TRUSTED_DRAM_BASE
+#define BL32_DRAM_LIMIT			(FVP_TRUSTED_DRAM_BASE + (1 << 21))
+
+#if FVP_TSP_RAM_LOCATION_ID == FVP_IN_TRUSTED_SRAM
 # define TSP_SEC_MEM_BASE		FVP_TRUSTED_SRAM_BASE
 # define TSP_SEC_MEM_SIZE		FVP_TRUSTED_SRAM_SIZE
 # define TSP_PROGBITS_LIMIT		BL2_BASE
-# define BL32_BASE			FVP_TRUSTED_SRAM_BASE
-# define BL32_LIMIT			BL31_BASE
-#elif FVP_TSP_RAM_LOCATION_ID == FVP_TRUSTED_DRAM_ID
+# define BL32_BASE			BL32_SRAM_BASE
+# define BL32_LIMIT			BL32_SRAM_LIMIT
+#elif FVP_TSP_RAM_LOCATION_ID == FVP_IN_TRUSTED_DRAM
 # define TSP_SEC_MEM_BASE		FVP_TRUSTED_DRAM_BASE
 # define TSP_SEC_MEM_SIZE		FVP_TRUSTED_DRAM_SIZE
-# define BL32_BASE			FVP_TRUSTED_DRAM_BASE
-# define BL32_LIMIT			(FVP_TRUSTED_DRAM_BASE + (1 << 21))
-#elif FVP_TSP_RAM_LOCATION_ID == FVP_DRAM_ID
-# define TSP_SEC_MEM_BASE		DRAM1_SEC_BASE
-# define TSP_SEC_MEM_SIZE		DRAM1_SEC_SIZE
-# define BL32_BASE			DRAM1_SEC_BASE
-# define BL32_LIMIT			(DRAM1_SEC_BASE + DRAM1_SEC_SIZE)
+# define BL32_BASE			BL32_DRAM_BASE
+# define BL32_LIMIT			BL32_DRAM_LIMIT
 #else
 # error "Unsupported FVP_TSP_RAM_LOCATION_ID value"
 #endif
