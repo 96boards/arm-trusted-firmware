@@ -80,9 +80,8 @@ func plat_crash_console_putc
 	 * ---------------------------------------------
 	 */
 func plat_report_exception
-	/* save x0 */
-	mov	x8, x0
-1:
+	mov	x8, x30
+
 	/* Turn on LED according to x0 (0 -- f) */
 	ldr	x2, =0xf7020000
 	and	x1, x0, #1
@@ -94,32 +93,22 @@ func plat_report_exception
 	and	x1, x0, #8
 	str	w1, [x2, #32]
 
-	/* delay */
-	ldr	x5, =0x40000000
-1001:
-	subs	x5, x5, #1
-	b.ne	1001b
+	adr	x4, plat_err_str
+	bl	asm_print_str
 
-	/* Turn Off all four LEDs */
-	mov	w1, #0x0
-	str	w1, [x2, #4]
-	str	w1, [x2, #8]
-	str	w1, [x2, #16]
-	str	w1, [x2, #32]
-
-	/* delay */
-	ldr	x5, =0x40000000
-1002:
-	subs	x5, x5, #1
-	b.ne	1002b
+	adr	x4, esr_el3_str
+	bl	asm_print_str
 
 	mrs	x4, esr_el3
 	bl	asm_print_hex
 
-	mov	x0, x8
-	b	1b
+	adr	x4, elr_el3_str
+	bl	asm_print_str
 
-	mov	x0, x8
+	mrs	x4, elr_el3
+	bl	asm_print_hex
+
+	mov	x30, x8
 	ret
 
 	/* -----------------------------------------------------
@@ -153,3 +142,11 @@ func platform_get_core_pos
 	 */
 func platform_mem_init
 	ret
+
+.section .rodata.rev_err_str, "aS"
+plat_err_str:
+	.asciz "\nPlatform exception reporting:"
+esr_el3_str:
+	.asciz "\nESR_EL3: "
+elr_el3_str:
+	.asciz "\nELR_EL3: "
