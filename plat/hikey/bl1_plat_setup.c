@@ -171,10 +171,11 @@ static void hi6220_pmussi_init(void)
 	 * After reset, PMUSSI stays in reset mode.
 	 * Now make it out of reset.
 	 */
-	mmio_write_32(AO_SC_PERIPH_RSTDIS4, AO_SC_PERIPH_CLKEN4_PMUSSI);
+	mmio_write_32(AO_SC_PERIPH_RSTDIS4,
+		AO_SC_PERIPH_RSTDIS4_PRESET_PMUSSI_N);
 	do {
 		data = mmio_read_32(AO_SC_PERIPH_RSTSTAT4);
-	} while (data & AO_SC_PERIPH_CLKEN4_PMUSSI);
+	} while (data & AO_SC_PERIPH_RSTDIS4_PRESET_PMUSSI_N);
 
 	/* set PMU SSI clock latency for read operation */
 	data = mmio_read_32(AO_SC_MCU_SUBSYS_CTRL3);
@@ -183,9 +184,10 @@ static void hi6220_pmussi_init(void)
 	mmio_write_32(AO_SC_MCU_SUBSYS_CTRL3, data);
 
 	/* enable PMUSSI clock */
-	data = AO_SC_PERIPH_CLKEN5_PMUSSI_CCPU | AO_SC_PERIPH_CLKEN5_PMUSSI_MCU;
+	data = AO_SC_PERIPH_CLKEN5_PCLK_PMUSSI_CCPU |
+	       AO_SC_PERIPH_CLKEN5_PCLK_PMUSSI_MCU;
 	mmio_write_32(AO_SC_PERIPH_CLKEN5, data);
-	data = AO_SC_PERIPH_CLKEN4_PMUSSI;
+	data = AO_SC_PERIPH_CLKEN4_PCLK_PMUSSI;
 	mmio_write_32(AO_SC_PERIPH_CLKEN4, data);
 
 	/* output high on gpio0 */

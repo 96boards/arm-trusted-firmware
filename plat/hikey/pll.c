@@ -45,7 +45,6 @@ static void init_pll(void)
 {
 	unsigned int data;
 
-
 	data = mmio_read_32((0xf7032000 + 0x000));
 	data |= 0x1;
 	mmio_write_32((0xf7032000 + 0x000), data);
@@ -53,7 +52,6 @@ static void init_pll(void)
 	do {
 		data = mmio_read_32((0xf7032000 + 0x000));
 	} while (!(data & (1 << 28)));
-
 
 	data = mmio_read_32((0xf7800000 + 0x000));
 	data &= ~0x007;
@@ -1061,17 +1059,17 @@ static void reset_mmc0_clk(void)
 	unsigned int data;
 
 	/* disable mmc0 bus clock */
-	mmio_write_32(PERI_SC_PERIPH_CLKDIS0, PERI_CLK_MMC0);
+	mmio_write_32(PERI_SC_PERIPH_CLKDIS0, PERI_CLK0_MMC0);
 	do {
 		data = mmio_read_32(PERI_SC_PERIPH_CLKSTAT0);
-	} while (data & PERI_CLK_MMC0);
+	} while (data & PERI_CLK0_MMC0);
 	/* enable mmc0 bus clock */
-	mmio_write_32(PERI_SC_PERIPH_CLKEN0, PERI_CLK_MMC0);
+	mmio_write_32(PERI_SC_PERIPH_CLKEN0, PERI_CLK0_MMC0);
 	do {
 		data = mmio_read_32(PERI_SC_PERIPH_CLKSTAT0);
-	} while (!(data & PERI_CLK_MMC0));
+	} while (!(data & PERI_CLK0_MMC0));
 	/* reset mmc0 clock domain */
-	mmio_write_32(PERI_SC_PERIPH_RSTEN0, PERI_CLK_MMC0);
+	mmio_write_32(PERI_SC_PERIPH_RSTEN0, PERI_RST0_MMC0);
 
 	/* bypass mmc0 clock phase */
 	data = mmio_read_32(PERI_SC_PERIPH_CTRL2);
