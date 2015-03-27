@@ -163,6 +163,7 @@ void bl2_early_platform_setup(meminfo_t *mem_layout)
 	bl2_tzram_layout = *mem_layout;
 
 	io_setup();
+	get_partition();
 }
 
 /*******************************************************************************
@@ -172,7 +173,7 @@ void bl2_early_platform_setup(meminfo_t *mem_layout)
  ******************************************************************************/
 void bl2_platform_setup(void)
 {
-	get_partition();
+	return;
 }
 
 /* Flush the TF params and the TF plat params */
