@@ -258,10 +258,9 @@ ASFLAGS			+= 	-nostdinc -ffreestanding -Wa,--fatal-warnings	\
 				${DEFINES} ${INCLUDES}
 CFLAGS			+= 	-nostdinc -ffreestanding -Wall			\
 				-Werror -Wmissing-include-dirs			\
-				-mgeneral-regs-only -mstrict-align		\
-				-std=c99 -c -Os	${DEFINES} ${INCLUDES}
-CFLAGS			+=	-ffunction-sections -fdata-sections		\
-				-fno-delete-null-pointer-checks
+				-mgeneral-regs-only -std=c99 -c -Os		\
+				${DEFINES} ${INCLUDES}
+CFLAGS			+=	-ffunction-sections -fdata-sections
 
 LDFLAGS			+=	--fatal-warnings -O1
 LDFLAGS			+=	--gc-sections
