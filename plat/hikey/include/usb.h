@@ -776,7 +776,7 @@ struct usb_endpoint_descriptor {
         unsigned char  bmAttributes;
         unsigned short wMaxPacketSize;
         unsigned char  bInterval;
-};
+} __attribute__ ((packed));
 
 #define USB_DT_ENDPOINT_SIZE            7
 #define USB_DT_ENDPOINT_AUDIO_SIZE      9       /* Audio extension */
