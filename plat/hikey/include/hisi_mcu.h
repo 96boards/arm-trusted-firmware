@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2013-2014, ARM Limited and Contributors. All rights reserved.
+ * Copyright (c) 2014-2015, Linaro Ltd and Contributors. All rights reserved.
+ * Copyright (c) 2014-2015, Hisilicon Ltd and Contributors. All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -28,55 +29,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef __MMIO_H__
-#define __MMIO_H__
+#ifndef	__MCU_H__
+#define	__MCU_H__
 
-#include <arch_helpers.h>
 #include <stdint.h>
 
-static inline void mmio_write_8(uintptr_t addr, uint8_t value)
-{
-	dsb();
-	*(volatile uint8_t*)addr = value;
-}
+extern void hisi_mcu_enable_sram(void);
+extern void hisi_mcu_start_run(void);
+extern int hisi_mcu_load_image(uintptr_t image_base, uint32_t image_size);
 
-static inline uint8_t mmio_read_8(uintptr_t addr)
-{
-	uint8_t val;
-
-	val = *(volatile uint8_t*)addr;
-	dsb();
-	return val;
-}
-
-static inline void mmio_write_32(uintptr_t addr, uint32_t value)
-{
-	dsb();
-	*(volatile uint32_t*)addr = value;
-}
-
-static inline uint32_t mmio_read_32(uintptr_t addr)
-{
-	uint32_t val;
-
-	val = *(volatile uint32_t*)addr;
-	dsb();
-	return val;
-}
-
-static inline void mmio_write_64(uintptr_t addr, uint64_t value)
-{
-	dsb();
-	*(volatile uint64_t*)addr = value;
-}
-
-static inline uint64_t mmio_read_64(uintptr_t addr)
-{
-	uint64_t val;
-
-	val = *(volatile uint64_t*)addr;
-	dsb();
-	return val;
-}
-
-#endif /* __MMIO_H__ */
+#endif	/* __MCU_H__ */
