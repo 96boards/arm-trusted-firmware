@@ -1106,20 +1106,20 @@ static void dvc_and_picophy_init_chip(void)
 	unsigned int data;
 
 	/* enable USB clock */
-	mmio_write_32(PERI_SC_PERIPH_CLKEN0, PERI_CLK_USBOTG);
+	mmio_write_32(PERI_SC_PERIPH_CLKEN0, PERI_CLK0_USBOTG);
 	do {
 		data = mmio_read_32(PERI_SC_PERIPH_CLKSTAT0);
-	} while ((data & PERI_CLK_USBOTG) == 0);
+	} while ((data & PERI_CLK0_USBOTG) == 0);
 
 
 	/* out of reset */
 	mmio_write_32(PERI_SC_PERIPH_RSTDIS0,
-		      PERI_RST_USBOTG_BUS | PERI_RST_PICOPHY |
-		      PERI_RST_USBOTG | PERI_RST_USBOTG_32K);
+		      PERI_RST0_USBOTG_BUS | PERI_RST0_POR_PICOPHY |
+		      PERI_RST0_USBOTG | PERI_RST0_USBOTG_32K);
 	do {
 		data = mmio_read_32(PERI_SC_PERIPH_RSTSTAT0);
-		data &= PERI_RST_USBOTG_BUS | PERI_RST_PICOPHY |
-			PERI_RST_USBOTG | PERI_RST_USBOTG_32K;
+		data &= PERI_RST0_USBOTG_BUS | PERI_RST0_POR_PICOPHY |
+			PERI_RST0_USBOTG | PERI_RST0_USBOTG_32K;
 	} while (data);
 
 	mmio_write_32(PERI_SC_PERIPH_CTRL8, EYE_PATTERN);
@@ -1127,18 +1127,18 @@ static void dvc_and_picophy_init_chip(void)
 	/* configure USB PHY */
 	data = mmio_read_32(PERI_SC_PERIPH_CTRL4);
 	/* make PHY out of low power mode */
-	data &= ~PERIPH_CTRL4_PICO_SIDDQ;
+	data &= ~PERI_CTRL4_PICO_SIDDQ;
 	/* detect VBUS by external circuit, switch D+ to 1.5KOhm pullup */
-	data |= PERIPH_CTRL4_PICO_VBUSVLDEXTSEL | PERIPH_CTRL4_PICO_VBUSVLDEXT;
-	data &= ~PERIPH_CTRL4_FPGA_EXT_PHY_SEL;
+	data |= PERI_CTRL4_PICO_VBUSVLDEXTSEL | PERI_CTRL4_PICO_VBUSVLDEXT;
+	data &= ~PERI_CTRL4_FPGA_EXT_PHY_SEL;
 	/* select PHY */
-	data &= ~PERIPH_CTRL4_OTG_PHY_SEL;
+	data &= ~PERI_CTRL4_OTG_PHY_SEL;
 	mmio_write_32(PERI_SC_PERIPH_CTRL4, data);
 
 	udelay(1000);
 
 	data = mmio_read_32(PERI_SC_PERIPH_CTRL5);
-	data &= ~PERIPH_CTRL5_PICOPHY_BC_MODE;
+	data &= ~PERI_CTRL5_PICOPHY_BC_MODE;
 	mmio_write_32(PERI_SC_PERIPH_CTRL5, data);
     
 	udelay(20000);
