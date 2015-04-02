@@ -95,6 +95,11 @@ static const io_file_spec_t bl2_file_spec = {
 	.mode = FOPEN_MODE_RB
 };
 
+static const io_file_spec_t bl30_file_spec = {
+	.path = BL30_IMAGE_NAME,
+	.mode = FOPEN_MODE_RB
+};
+
 static const io_file_spec_t bl31_file_spec = {
 	.path = BL31_IMAGE_NAME,
 	.mode = FOPEN_MODE_RB
@@ -147,6 +152,11 @@ static const struct plat_io_policy policies[] = {
 		BL2_IMAGE_NAME,
 		&fip_dev_handle,
 		(uintptr_t)&bl2_file_spec,
+		open_fip
+	}, {
+		BL30_IMAGE_NAME,
+		&fip_dev_handle,
+		(uintptr_t)&bl30_file_spec,
 		open_fip
 	}, {
 		BL31_IMAGE_NAME,

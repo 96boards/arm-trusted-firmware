@@ -38,6 +38,8 @@
 #include <platform.h>
 #include <platform_def.h>
 #include <string.h>
+#include <mmio.h>
+#include <hi6220.h>
 #include "hikey_def.h"
 #include "hikey_private.h"
 
@@ -161,6 +163,7 @@ void bl2_early_platform_setup(meminfo_t *mem_layout)
 	bl2_tzram_layout = *mem_layout;
 
 	io_setup();
+	get_partition();
 }
 
 /*******************************************************************************
@@ -170,7 +173,7 @@ void bl2_early_platform_setup(meminfo_t *mem_layout)
  ******************************************************************************/
 void bl2_platform_setup(void)
 {
-	get_partition();
+	return;
 }
 
 /* Flush the TF params and the TF plat params */
@@ -200,6 +203,10 @@ void bl2_plat_arch_setup(void)
  ******************************************************************************/
 void bl2_plat_get_bl30_meminfo(meminfo_t *bl30_meminfo)
 {
+	bl30_meminfo->total_base = BL30_BASE;
+	bl30_meminfo->total_size = BL30_SIZE;
+	bl30_meminfo->free_base  = BL30_BASE;
+	bl30_meminfo->free_size  = BL30_SIZE;
 }
 
 /*******************************************************************************
@@ -208,6 +215,40 @@ void bl2_plat_get_bl30_meminfo(meminfo_t *bl30_meminfo)
  ******************************************************************************/
 int bl2_plat_handle_bl30(image_info_t *bl30_image_info)
 {
+	int *buf = (int *)bl30_image_info->image_base;
+
+	INFO("%s: [%x] %x %x %x %x\n",
+	     __func__, buf, buf[0], buf[1], buf[2], buf[3]);
+
+	buf += 50;
+	INFO("%s: [%x] %x %x %x %x\n",
+	     __func__, buf, buf[0], buf[1], buf[2], buf[3]);
+
+	buf += 50;
+	INFO("%s: [%x] %x %x %x %x\n",
+	     __func__, buf, buf[0], buf[1], buf[2], buf[3]);
+
+	buf  = (int *)(bl30_image_info->image_base +
+		       bl30_image_info->image_size);
+	buf -= 4;
+	INFO("%s: [%x] %x %x %x %x\n",
+	     __func__, buf, buf[0], buf[1], buf[2], buf[3]);
+
+	/* enable mcu sram */
+	hisi_mcu_enable_sram();
+
+	/* load mcu binary to sram */
+	hisi_mcu_load_image(bl30_image_info->image_base,
+			    bl30_image_info->image_size);
+
+	/* let mcu to run */
+	hisi_mcu_start_run();
+
+	INFO("%s: mcu pc is %x\n",
+		__func__, mmio_read_32(AO_SC_MCU_SUBSYS_STAT2));
+
+	INFO("%s: AO_SC_PERIPH_CLKSTAT4	is %x\n",
+		__func__, mmio_read_32(AO_SC_PERIPH_CLKSTAT4));
 	return 0;
 }
 
