@@ -39,6 +39,7 @@
 #include <mmio.h>
 #include <platform.h>
 #include <stddef.h>
+#include <hi6220.h>
 #include "hikey_def.h"
 #include "hikey_private.h"
 
@@ -128,6 +129,7 @@ void bl31_early_platform_setup(bl31_params_t *from_bl2,
 	bl33_ep_info = *from_bl2->bl33_ep_info;
 }
 
+
 /*******************************************************************************
  * Initialize the GIC.
  ******************************************************************************/
@@ -136,6 +138,8 @@ void bl31_platform_setup(void)
 	/* Initialize the gic cpu and distributor interfaces */
 	plat_gic_init();
 	arm_gic_setup();
+
+	hikey_pinmux_init();
 }
 
 /*******************************************************************************
