@@ -29,6 +29,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <arch_helpers.h>
 #include <console.h>
 #include <debug.h>
 #include <errno.h>
@@ -50,6 +51,8 @@ void hi6220_timer_init(void)
 		mmio_write_32(AO_SC_TIMER_EN0, data);
 		data = mmio_read_32(AO_SC_TIMER_EN0);
 	}
+	dsb();
+
 	/* enable the pclk of dual timer0 */
 	data = mmio_read_32(AO_SC_PERIPH_CLKSTAT4);
 	while (!(data & PCLK_TIMER1) || !(data & PCLK_TIMER0)) {
@@ -67,16 +70,19 @@ void hi6220_timer_init(void)
 	do {
 		data = mmio_read_32(AO_SC_PERIPH_RSTSTAT4);
 	} while ((data & PCLK_TIMER1) || (data & PCLK_TIMER0));
+	dsb();
 	
 	/* disable timer00 */
 	mmio_write_32(TIMER00_CONTROL, 0);
 	mmio_write_32(TIMER00_LOAD, 0xffffffff);
 	/* free running */
 	mmio_write_32(TIMER00_CONTROL, 0x82);
+	dsb();
 }
 
 static unsigned int get_timer_value(void)
 {
+	dsb();
 	return mmio_read_32(TIMER00_VALUE);
 }
 

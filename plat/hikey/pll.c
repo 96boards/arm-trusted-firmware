@@ -45,6 +45,7 @@ static void init_pll(void)
 {
 	unsigned int data;
 
+	dsb();
 	data = mmio_read_32((0xf7032000 + 0x000));
 	data |= 0x1;
 	mmio_write_32((0xf7032000 + 0x000), data);
@@ -62,6 +63,7 @@ static void init_pll(void)
 		data = mmio_read_32((0xf7800000 + 0x014));
 		data &= 0x007;
 	} while (data != 0x004);
+	dsb();
 }
 
 static void init_freq(void)
@@ -102,10 +104,10 @@ static void init_freq(void)
 	dsb();
 	mdelay(10);
 
-
 	data = mmio_read_32((0xf6504000 + 0x054));
 	data &= ~((1 << 0) | (1 << 11));
 	mmio_write_32((0xf6504000 + 0x054), data);
+	dsb();
 	mdelay(10);
 
 	data = mmio_read_32((0xf7032000 + 0x104));
@@ -123,6 +125,7 @@ static void init_freq(void)
 		data &= (1 << 2);
 	} while (data != (1 << 2));
 
+	dsb();
 	data = mmio_read_32((0xf6504000 + 0x06c));
 	data &= ~0xffff;
 	data |= 0x56;
@@ -207,6 +210,7 @@ static void init_freq(void)
 		data = mmio_read_32((0xf7032000 + 0x100));
 		data &= (1 << 1);
 	} while (data != (1 << 1));
+	dsb();
 	mdelay(1000);
 
 	data = mmio_read_32((0xf6504000 + 0x054));
@@ -218,6 +222,7 @@ static void init_freq(void)
 	data &= ~((1 << 4) |
 			(3 << 12));
 	mmio_write_32((0xf7032000 + 0x110), data);
+	dsb();
 }
 
 static int cat_533mhz_800mhz(void)
