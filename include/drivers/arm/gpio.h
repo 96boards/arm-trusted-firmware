@@ -36,6 +36,7 @@ extern int gpio_direction_input(unsigned int gpio);
 extern int gpio_direction_output(unsigned int gpio);
 extern int gpio_get_value(unsigned int gpio);
 extern int gpio_set_value(unsigned int gpio, unsigned int value);
+extern int gpio_set_intr_input(unsigned int gpio, unsigned int core);
 extern int gpio_register_device(unsigned int base);
 
 #endif	/* __GPIO_H__ */
