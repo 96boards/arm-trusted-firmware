@@ -61,6 +61,23 @@ __attribute__ ((section("tzfw_coherent_mem")))
  ******************************************************************************/
 const plat_pm_ops_t *psci_plat_pm_ops;
 
+typedef volatile struct psci_mailbox {
+	unsigned long value
+	__attribute__((__aligned__(CACHE_WRITEBACK_GRANULE)));
+} psci_mailbox_t;
+
+psci_mailbox_t psci_mboxes[PLATFORM_CORE_COUNT];
+
+void psci_program_mailbox(uint64_t mpidr, uint64_t address)
+{
+	uint64_t linear_id;
+
+	linear_id = platform_get_core_pos(mpidr);
+	psci_mboxes[linear_id].value = address;
+	flush_dcache_range((unsigned long)&psci_mboxes[linear_id],
+			   sizeof(unsigned long));
+}
+
 /*******************************************************************************
  * This function is passed an array of pointers to affinity level nodes in the
  * topology tree for an mpidr. It iterates through the nodes to find the highest

@@ -216,6 +216,7 @@ typedef struct spd_pm_ops {
 /*******************************************************************************
  * Function & Data prototypes
  ******************************************************************************/
+void psci_program_mailbox(uint64_t mpidr, uint64_t address);
 unsigned int psci_version(void);
 int psci_affinity_info(unsigned long, unsigned int);
 int psci_migrate(unsigned long);

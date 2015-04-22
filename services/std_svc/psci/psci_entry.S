@@ -32,10 +32,12 @@
 #include <asm_macros.S>
 #include <psci.h>
 #include <xlat_tables.h>
+#include <gic_v2.h>
 
 	.globl	psci_aff_on_finish_entry
 	.globl	psci_aff_suspend_finish_entry
 	.globl	psci_power_down_wfi
+	.globl  psci_mboxes
 
 	/* -----------------------------------------------------
 	 * This cpu has been physically powered up. Depending
@@ -165,8 +167,31 @@ psci_aff_common_finish_entry:
 	 * --------------------------------------------
 	 */
 func psci_power_down_wfi
+
+	mrs	x2, scr_el3
+	orr	x2, x2, #(SCR_IRQ_BIT | SCR_FIQ_BIT)	// Enable IRQ
+	msr	scr_el3, x2
+	dsb	sy
+
+	ldr     x1, =GICC_BASE
+	ldr	w0, [x1, #GICC_CTLR]
+	bic	w0, w0, #(IRQ_BYP_DIS_GRP1 | FIQ_BYP_DIS_GRP1)
+	bic	w0, w0, #(IRQ_BYP_DIS_GRP0 | FIQ_BYP_DIS_GRP0)
+	orr	w0, w0, #(ENABLE_GRP0 | ENABLE_GRP1)
+	str	w0, [x1, #GICC_CTLR]
+	dsb	sy
+
+	bl	disable_mmu_icache_el3
+
+wfi_spill:
 	dsb	sy		// ensure write buffer empty
 	wfi
-wfi_spill:
-	b	wfi_spill
 
+	mrs	x0, mpidr_el1
+	ldr	x10, =psci_mboxes
+	bl	platform_get_core_pos
+	lsl	x0, x0, #CACHE_WRITEBACK_SHIFT
+	ldr	x0, [x10, x0]
+	cbz	x0, wfi_spill
+
+	blr	x0		// jump to secure entry point
