@@ -35,6 +35,7 @@
 #include <hi6220_regs_acpu.h>
 #include <hi6220_regs_ao.h>
 #include <hi6220_regs_peri.h>
+#include <hi6220_regs_pinmux.h>
 #include <hi6220_regs_pmctrl.h>
 
 #include <hisi_mcu.h>
