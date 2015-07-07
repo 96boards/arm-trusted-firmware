@@ -730,8 +730,20 @@ static int acpu_dvfs_set_freq(void)
         return 0;
 }
 
+struct acpu_dvfs_volt_setting
+{
+	unsigned int magic;
+	unsigned int support_freq_num;
+	unsigned int support_freq_max;
+	unsigned int start_prof;
+	unsigned int vol[7];
+	unsigned int hmp_dly_threshold[7];
+};
+
 static void acpu_dvfs_volt_init(void)
 {
+	struct acpu_dvfs_volt_setting *volt;
+
 	/*
 	 * - set default voltage;
 	 * - set pmu address;
@@ -745,6 +757,27 @@ static void acpu_dvfs_volt_init(void)
 	mmio_write_32(PMCTRL_ACPUPMUVOLUPTIME, 0x60);
 	mmio_write_32(PMCTRL_ACPUPMUVOLDNTIME, 0x60);
 	mmio_write_32(PMCTRL_ACPUCLKOFFCFG, 0x1000);
+
+	volt= (void *)MEMORY_AXI_ACPU_FREQ_VOL_ADDR;
+	volt->magic = 0x5a5ac5c5;
+	volt->support_freq_num = 5;
+	volt->support_freq_max = 1200000;
+	volt->start_prof = 4;
+	volt->vol[0] = 0x49;
+	volt->vol[1] = 0x49;
+	volt->vol[2] = 0x50;
+	volt->vol[3] = 0x60;
+	volt->vol[4] = 0x78;
+	volt->vol[5] = 0x78;
+	volt->vol[6] = 0x78;
+
+	volt->hmp_dly_threshold[0] = 0x0;
+	volt->hmp_dly_threshold[1] = 0x0;
+	volt->hmp_dly_threshold[2] = 0x0;
+	volt->hmp_dly_threshold[3] = 0x0e8b0e45;
+	volt->hmp_dly_threshold[4] = 0x10691023;
+	volt->hmp_dly_threshold[5] = 0x10691023;
+	volt->hmp_dly_threshold[6] = 0x10691023;
 
 	INFO("%s: success!\n", __func__);
 }
