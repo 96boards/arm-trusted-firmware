@@ -359,6 +359,9 @@ uint64_t opteed_smc_handler(uint32_t smc_fid,
 	 */
 
 	if (is_caller_non_secure(flags)) {
+		gp_regs_t *sec_gpregs = get_gpregs_ctx(&optee_ctx->cpu_ctx);
+		gp_regs_t *ns_gpregs = get_gpregs_ctx(handle);
+
 		/*
 		 * This is a fresh request from the non-secure client.
 		 * The parameters are in x1 and x2. Figure out which
@@ -398,11 +401,15 @@ uint64_t opteed_smc_handler(uint32_t smc_fid,
 		cm_el1_sysregs_context_restore(SECURE);
 		cm_set_next_eret_context(SECURE);
 
-		/* Propagate hypervisor client ID */
-		write_ctx_reg(get_gpregs_ctx(&optee_ctx->cpu_ctx),
-			      CTX_GPREG_X7,
-			      read_ctx_reg(get_gpregs_ctx(handle),
-					   CTX_GPREG_X7));
+		/* Propagate X4-X7 */
+		write_ctx_reg(sec_gpregs, CTX_GPREG_X4,
+			      read_ctx_reg(ns_gpregs, CTX_GPREG_X4));
+		write_ctx_reg(sec_gpregs, CTX_GPREG_X5,
+			      read_ctx_reg(ns_gpregs, CTX_GPREG_X5));
+		write_ctx_reg(sec_gpregs, CTX_GPREG_X6,
+			      read_ctx_reg(ns_gpregs, CTX_GPREG_X6));
+		write_ctx_reg(sec_gpregs, CTX_GPREG_X7,
+			      read_ctx_reg(ns_gpregs, CTX_GPREG_X7));
 
 		SMC_RET4(&optee_ctx->cpu_ctx, smc_fid, x1, x2, x3);
 	}
