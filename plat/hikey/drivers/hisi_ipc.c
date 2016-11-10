@@ -37,6 +37,8 @@
 #include <stdarg.h>
 #include <string.h>
 
+#include <hi6220_regs_acpu.h>
+
 #define BIT(x)	(0x1 << (x))
 
 static int  _ipc_init = 0;
@@ -138,7 +140,21 @@ void hisi_ipc_cpu_on_off(unsigned int cpu, unsigned int cluster,
 
 void hisi_ipc_cpu_on(unsigned int cpu, unsigned int cluster)
 {
+	unsigned int data, expected;
+
 	hisi_ipc_cpu_on_off(cpu, cluster, HISI_IPC_PM_ON);
+
+	/* Enable debug module */
+	data = mmio_read_32(ACPU_SC_PDBGUP_MBIST);
+	if (cluster)
+		expected = 1 << (cpu + PDBGUP_CLUSTER1_SHIFT);
+	else
+		expected = 1 << cpu;
+	mmio_write_32(ACPU_SC_PDBGUP_MBIST, data | expected);
+	do {
+		/* RAW barrier */
+		data = mmio_read_32(ACPU_SC_PDBGUP_MBIST);
+	} while (!(data & expected));
 }
 
 void hisi_ipc_cpu_off(unsigned int cpu, unsigned int cluster)
